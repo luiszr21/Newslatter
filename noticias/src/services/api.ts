@@ -1,24 +1,27 @@
-import type { NewsResponse, Category } from '../types/News';
+import type { Article, Category } from '../types/news';
 
 const WEBHOOK_URL = 'https://luiszr21.app.n8n.cloud/webhook/noticias';
 
-export async function fetchNews(): Promise<NewsResponse[]> {
-  const response = await fetch(WEBHOOK_URL);
+export interface CategoryNews {
+  category: Category;
+  articles: Article[];
+}
+
+export async function fetchNews(): Promise<CategoryNews[]> {
+  const response = await fetch(WEBHOOK_URL, { cache: 'no-store' });
 
   if (!response.ok) {
     throw new Error('Erro ao buscar notícias');
   }
 
   const data = await response.json();
-  return data;
-}
+    console.log('Dados do N8N:', JSON.stringify(data));
 
-export function filterByCategory(data: NewsResponse[], category: Category): NewsResponse {
-  const categoryMap: Record<Category, string> = {
-    technology: 'technology',
-    general: 'general',
-    sports: 'sports',
-  };
 
-  return data.find((_, index) => index === Object.keys(categoryMap).indexOf(category)) || data[0];
+  const categoryOrder: Category[] = ['technology', 'general', 'sports'];
+
+  return categoryOrder.map((category, index) => ({
+    category,
+    articles: data[index]?.articles || [],
+  }));
 }
