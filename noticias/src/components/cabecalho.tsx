@@ -1,4 +1,3 @@
-
 interface HeaderProps {
   onRefresh: () => void;
   isLoading: boolean;
@@ -13,9 +12,9 @@ export function Header({ onRefresh, isLoading }: HeaderProps) {
       <button
         onClick={onRefresh}
         disabled={isLoading}
-        className=""
+        className="border border-white text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-white hover:text-[#0a1628] transition-all disabled:opacity-50"
       >
-        {isLoading ? '' : ''}
+        {isLoading ? 'Atualizando...' : 'Atualizar Notícias'}
       </button>
     </div>
   );
